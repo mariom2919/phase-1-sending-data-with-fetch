@@ -1,42 +1,29 @@
 function submitData(name, email) {
-    let formData = {
-      name: name,
-      email: email
+    const userData = {
+      name,
+      email,
     };
   
-    let configObj = {
+    const configurationObject = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Accept": "application/json"
+        "Accept": "application/json",
       },
-      body: JSON.stringify(formData)
+      body: JSON.stringify(userData),
     };
   
-    return fetch("http://localhost:3000/users", configObj)
-      .then(function(response) {
-        // Check if the response status is okay (200-299)
-        if (!response.ok) {
-          throw new Error('Request failed');
-        }
-        return response.json(); // Parse JSON response
+    return fetch("http://localhost:3000/users", configurationObject)
+      .then((response) => response.json())
+      .then((data) => {
+        const userId = document.createElement("p");
+        userId.textContent = `New user ID: ${data.id}`;
+        document.body.appendChild(userId);
       })
-      .then(function(data) {
-        // Assuming data includes the new id as `data.id`
-        let newId = data.id;
-        // Append newId to the DOM
-        document.body.innerHTML += `<p>New ID: ${newId}</p>`;
-        return data; // Return data for further chaining if needed
-      })
-      .catch(function(error) {
-        // Handle errors
-        console.error('Error:', error.message);
-        // Append error message to the DOM
-        document.body.innerHTML += `<p>Error: ${error.message}</p>`;
-        throw error; // Rethrow the error to propagate it further
+      .catch((error) => {
+        const errorMessage = document.createElement("p");
+        errorMessage.textContent = `Error: ${error.message}`;
+        document.body.appendChild(errorMessage);
       });
   }
-  
-  // Export submitData function if required
-  module.exports = submitData;
   
